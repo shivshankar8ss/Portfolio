@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -12,41 +12,12 @@ import {
   FaGraduationCap,
 } from "react-icons/fa";
 
-// Create a separate component for each achievement item
-const AchievementItem = ({ achievement, isActive }) => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!isActive) return;
-
-    let start = 0;
-    const end = achievement.value || 0;
-    const duration = 1000;
-    const increment = end / (duration / 16); // ~60fps
-
-    const step = () => {
-      start += increment;
-      if (start < end) {
-        setCount(Math.floor(start));
-        requestAnimationFrame(step);
-      } else {
-        setCount(end);
-      }
-    };
-
-    requestAnimationFrame(step);
-  }, [isActive, achievement.value]);
-
+// Simplified AchievementItem component without counter
+const AchievementItem = ({ achievement }) => {
   return (
     <div className="bg-gray-800/90 rounded-2xl shadow-xl p-8 flex flex-col items-center justify-start h-full transition-transform duration-300 hover:scale-105">
       {achievement.icon}
-      <h2 className="text-white text-3xl sm:text-4xl font-extrabold flex items-center mt-2">
-        <span className="text-indigo-400 text-3xl sm:text-4xl font-extrabold">
-          {count}
-        </span>
-        {achievement.postfix}
-      </h2>
-      <p className="text-[#ADB7BE] text-lg mt-1 font-semibold">
+      <p className="text-[#ADB7BE] text-lg mt-4 font-semibold text-center">
         {achievement.metric}
       </p>
       <p className="text-gray-400 text-sm text-center mt-4">
@@ -59,8 +30,6 @@ const AchievementItem = ({ achievement, isActive }) => {
 const achievementsList = [
   {
     metric: "JEE ADVANCED 2022 Qualified",
-    value: 1, // Added value property for counting
-    postfix: "",
     description:
       "Successfully qualified the prestigious Joint Entrance Examination (JEE) Advanced 2022. " +
       "Demonstrated strong problem-solving skills and deep understanding of Physics, Chemistry, and Math.",
@@ -68,8 +37,6 @@ const achievementsList = [
   },
   {
     metric: "McKinsey Forward Program",
-    value: 1,
-    postfix: "",
     description:
       "Completed the McKinsey Forward Program to enhance business acumen and analytical thinking. " +
       "Learned real-world case studies and frameworks to approach complex problems effectively.",
@@ -77,8 +44,6 @@ const achievementsList = [
   },
   {
     metric: "AI/ML Infosys Internship",
-    value: 1,
-    postfix: "",
     description:
       "Worked as an AI/ML intern at Infosys Springboard, developing predictive machine learning models. " +
       "Implemented data preprocessing, model training, and evaluation for practical AI applications.",
@@ -86,8 +51,6 @@ const achievementsList = [
   },
   {
     metric: "IIT Guwahati Internship",
-    value: 1,
-    postfix: "",
     description:
       "Completed a research internship at IIT Guwahati, focusing on AI/ML and automation projects. " +
       "Conducted experiments, analyzed datasets, and contributed to the development of intelligent systems.",
@@ -95,8 +58,6 @@ const achievementsList = [
   },
   {
     metric: "Exposys Data Labs Internship",
-    value: 1,
-    postfix: "",
     description:
       "Interned at Exposys Data Labs, working on data analytics and machine learning solutions. " +
       "Built models for real-world datasets and generated actionable insights for clients.",
@@ -104,8 +65,6 @@ const achievementsList = [
   },
   {
     metric: "ML Certification (Coursera)",
-    value: 1,
-    postfix: "",
     description:
       "Completed the Machine Learning certification on Coursera to strengthen foundational ML knowledge. " +
       "Gained hands-on experience in supervised and unsupervised learning techniques and model evaluation.",
@@ -114,8 +73,6 @@ const achievementsList = [
 ];
 
 const AchievementsSection = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-
   return (
     <section
       id="achievements"
@@ -132,7 +89,6 @@ const AchievementsSection = () => {
         loop={true}
         spaceBetween={30}
         slidesPerView={1}
-        onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
         breakpoints={{
           640: { slidesPerView: 1 },
           1024: { slidesPerView: 2 },
@@ -141,10 +97,7 @@ const AchievementsSection = () => {
       >
         {achievementsList.map((achievement, index) => (
           <SwiperSlide key={index}>
-            <AchievementItem
-              achievement={achievement}
-              isActive={activeIndex === index}
-            />
+            <AchievementItem achievement={achievement} />
           </SwiperSlide>
         ))}
       </Swiper>
