@@ -12,13 +12,18 @@ import {
   FaGraduationCap,
 } from "react-icons/fa";
 
-const useCountUp = (end, isActive, duration = 1000) => {
+// Create a separate component for each achievement item
+const AchievementItem = ({ achievement, isActive }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (!isActive) return;
+
     let start = 0;
+    const end = achievement.value || 0;
+    const duration = 1000;
     const increment = end / (duration / 16); // ~60fps
+
     const step = () => {
       start += increment;
       if (start < end) {
@@ -28,15 +33,33 @@ const useCountUp = (end, isActive, duration = 1000) => {
         setCount(end);
       }
     };
-    requestAnimationFrame(step);
-  }, [isActive, end, duration]);
 
-  return count;
+    requestAnimationFrame(step);
+  }, [isActive, achievement.value]);
+
+  return (
+    <div className="bg-gray-800/90 rounded-2xl shadow-xl p-8 flex flex-col items-center justify-start h-full transition-transform duration-300 hover:scale-105">
+      {achievement.icon}
+      <h2 className="text-white text-3xl sm:text-4xl font-extrabold flex items-center mt-2">
+        <span className="text-indigo-400 text-3xl sm:text-4xl font-extrabold">
+          {count}
+        </span>
+        {achievement.postfix}
+      </h2>
+      <p className="text-[#ADB7BE] text-lg mt-1 font-semibold">
+        {achievement.metric}
+      </p>
+      <p className="text-gray-400 text-sm text-center mt-4">
+        {achievement.description}
+      </p>
+    </div>
+  );
 };
 
 const achievementsList = [
   {
     metric: "JEE ADVANCED 2022 Qualified",
+    value: 1, // Added value property for counting
     postfix: "",
     description:
       "Successfully qualified the prestigious Joint Entrance Examination (JEE) Advanced 2022. " +
@@ -45,6 +68,7 @@ const achievementsList = [
   },
   {
     metric: "McKinsey Forward Program",
+    value: 1,
     postfix: "",
     description:
       "Completed the McKinsey Forward Program to enhance business acumen and analytical thinking. " +
@@ -53,6 +77,7 @@ const achievementsList = [
   },
   {
     metric: "AI/ML Infosys Internship",
+    value: 1,
     postfix: "",
     description:
       "Worked as an AI/ML intern at Infosys Springboard, developing predictive machine learning models. " +
@@ -61,6 +86,7 @@ const achievementsList = [
   },
   {
     metric: "IIT Guwahati Internship",
+    value: 1,
     postfix: "",
     description:
       "Completed a research internship at IIT Guwahati, focusing on AI/ML and automation projects. " +
@@ -69,6 +95,7 @@ const achievementsList = [
   },
   {
     metric: "Exposys Data Labs Internship",
+    value: 1,
     postfix: "",
     description:
       "Interned at Exposys Data Labs, working on data analytics and machine learning solutions. " +
@@ -77,6 +104,7 @@ const achievementsList = [
   },
   {
     metric: "ML Certification (Coursera)",
+    value: 1,
     postfix: "",
     description:
       "Completed the Machine Learning certification on Coursera to strengthen foundational ML knowledge. " +
@@ -111,28 +139,14 @@ const AchievementsSection = () => {
         }}
         className="w-full max-w-6xl"
       >
-        {achievementsList.map((achievement, index) => {
-          const count = useCountUp(achievement.value, activeIndex === index);
-          return (
-            <SwiperSlide key={index}>
-              <div className="bg-gray-800/90 rounded-2xl shadow-xl p-8 flex flex-col items-center justify-start h-full transition-transform duration-300 hover:scale-105">
-                {achievement.icon}
-                <h2 className="text-white text-3xl sm:text-4xl font-extrabold flex items-center mt-2">
-                  <span className="text-indigo-400 text-3xl sm:text-4xl font-extrabold">
-                    {count}
-                  </span>
-                  {achievement.postfix}
-                </h2>
-                <p className="text-[#ADB7BE] text-lg mt-1 font-semibold">
-                  {achievement.metric}
-                </p>
-                <p className="text-gray-400 text-sm text-center mt-4">
-                  {achievement.description}
-                </p>
-              </div>
-            </SwiperSlide>
-          );
-        })}
+        {achievementsList.map((achievement, index) => (
+          <SwiperSlide key={index}>
+            <AchievementItem
+              achievement={achievement}
+              isActive={activeIndex === index}
+            />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </section>
   );
