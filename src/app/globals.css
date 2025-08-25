@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0; /* text stays dark */
+  --background-start-rgb: 255, 255, 255; /* pure white */
+  --background-end-rgb: 245, 247, 250;   /* light gray for subtle gradient */
+}
+
+/* Remove dark mode preference override */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 0, 0, 0;  /* keep text dark even in dark mode */
+    --background-start-rgb: 255, 255, 255;
+    --background-end-rgb: 245, 247, 250;
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+/* Full width slide animation */
+@keyframes slide {
+  0%, 20%   { transform: translateX(0%); }
+  25%, 45%  { transform: translateX(-100%); }
+  50%, 70%  { transform: translateX(-200%); }
+  75%, 100% { transform: translateX(0%); }
+}
+
+.animate-slide {
+  animation: slide 12s infinite ease-in-out;
+  width: 100vw;
+}
